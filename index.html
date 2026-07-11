@@ -4,25 +4,27 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     body { font-family: 'Segoe UI', sans-serif; background: #1a1a2e; color: #e0e0e0; padding: 20px; text-align: center; margin: 0; min-height: 100vh; overflow-x: hidden; }
-    
     .container { background: #16213e; max-width: 600px; margin: auto; padding: 40px; border-radius: 25px; box-shadow: 0 15px 40px rgba(0,0,0,0.6); }
     h1 { color: #4ecca3; font-size: 2.2em; margin-bottom: 30px; }
 
+    /* বক্সের উচ্চতা ফিক্সড রাখা হয়েছে */
     #textContainer { 
       margin-bottom: 40px; text-align: left; background: #0f3460; padding: 25px; 
       border-radius: 20px; color: #ffffff; border: 2px solid #4ecca3;
       min-height: 120px; position: relative; font-size: 1.3em; line-height: 2;
     }
 
-    /* প্রতিটি অক্ষরের আলাদা ব্লক */
+    /* প্রতিটি অক্ষরের পজিশন ফিক্সড করার জন্য র‍্যাপার */
+    .char-box { display: inline-block; position: relative; min-width: 0.5em; }
+
     .char { 
       display: inline-block; 
-      transition: transform 1.2s cubic-bezier(0.19, 1, 0.22, 1);
+      transition: all 1.2s cubic-bezier(0.19, 1, 0.22, 1);
       cursor: crosshair;
       font-weight: bold;
-      padding: 0 2px;
-      /* এটি খুব জরুরি: এটি মাউস ইভেন্টকে শুধুমাত্র অক্ষরের উপর সীমাবদ্ধ রাখবে */
-      pointer-events: auto; 
+      pointer-events: auto;
+      /* এটি অক্ষরকে তার জায়গায় স্থির রাখবে */
+      position: relative; 
     }
 
     input { width: 95%; padding: 20px; margin: 15px 0; border: 2px solid #4ecca3; border-radius: 15px; background: #1a1a2e; color: white; outline: none; font-size: 1.2em; }
@@ -55,42 +57,33 @@
   const text = instructionList.innerText;
   instructionList.innerHTML = '';
 
+  // প্রতিটি অক্ষরকে একটি করে বক্সের ভেতর রাখা
   text.split('').forEach(char => {
+    const wrapper = document.createElement('span');
+    wrapper.className = 'char-box';
     const span = document.createElement('span');
     span.innerText = char === ' ' ? '\u00A0' : char;
     span.className = 'char';
-    instructionList.appendChild(span);
+    wrapper.appendChild(span);
+    instructionList.appendChild(wrapper);
   });
 
   const chars = document.querySelectorAll('.char');
 
-  // প্রতিটি অক্ষরের ওপর আলাদা ইভেন্ট লিসেনার
   chars.forEach(char => {
-    const triggerScatter = () => {
-      // অক্ষরের বর্তমান পজিশন নেওয়া
-      const rect = char.getBoundingClientRect();
+    char.addEventListener('mouseenter', () => {
+      // পজিশন ফিক্সড না করে শুধু ট্রান্সফর্ম করছি, যাতে লাইন নড়বে না
+      const randomX = (Math.random() - 0.5) * 1000;
+      const randomY = (Math.random() - 0.5) * 1000;
       
       char.style.position = 'fixed';
-      char.style.left = rect.left + 'px';
-      char.style.top = rect.top + 'px';
-      
-      // র‍্যান্ডম দিকে ছিটকে যাওয়া
-      const randomX = (Math.random() - 0.5) * 1200;
-      const randomY = (Math.random() - 0.5) * 1200;
+      char.style.zIndex = '9999';
       char.style.transform = `translate(${randomX}px, ${randomY}px) rotate(${Math.random() * 720}deg)`;
       
-      // ২ সেকেন্ড পর ফিরে আসা
       setTimeout(() => {
-        char.style.position = 'static';
+        char.style.position = 'relative';
         char.style.transform = `translate(0, 0) rotate(0deg)`;
       }, 2000);
-    };
-
-    // মাউস এবং টাচ ইভেন্ট সরাসরি অক্ষরের ওপর
-    char.addEventListener('mouseenter', triggerScatter);
-    char.addEventListener('touchstart', (e) => {
-      e.preventDefault(); // অন্য কাজ বন্ধ করা
-      triggerScatter();
     });
   });
 
