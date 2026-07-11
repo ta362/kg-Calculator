@@ -7,24 +7,20 @@
     .container { background: #16213e; max-width: 600px; margin: auto; padding: 40px; border-radius: 25px; box-shadow: 0 15px 40px rgba(0,0,0,0.6); }
     h1 { color: #4ecca3; font-size: 2.2em; margin-bottom: 30px; }
 
-    /* বক্সের উচ্চতা ফিক্সড রাখা হয়েছে */
     #textContainer { 
       margin-bottom: 40px; text-align: left; background: #0f3460; padding: 25px; 
       border-radius: 20px; color: #ffffff; border: 2px solid #4ecca3;
-      min-height: 120px; position: relative; font-size: 1.3em; line-height: 2;
+      min-height: 120px; font-size: 1.3em; line-height: 2;
     }
 
-    /* প্রতিটি অক্ষরের পজিশন ফিক্সড করার জন্য র‍্যাপার */
-    .char-box { display: inline-block; position: relative; min-width: 0.5em; }
-
+    /* অক্ষরগুলোর জন্য বিশেষ ইফেক্ট */
     .char { 
       display: inline-block; 
-      transition: all 1.2s cubic-bezier(0.19, 1, 0.22, 1);
-      cursor: crosshair;
+      transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+      cursor: pointer;
       font-weight: bold;
-      pointer-events: auto;
-      /* এটি অক্ষরকে তার জায়গায় স্থির রাখবে */
-      position: relative; 
+      padding: 0 2px;
+      user-select: none;
     }
 
     input { width: 95%; padding: 20px; margin: 15px 0; border: 2px solid #4ecca3; border-radius: 15px; background: #1a1a2e; color: white; outline: none; font-size: 1.2em; }
@@ -57,33 +53,23 @@
   const text = instructionList.innerText;
   instructionList.innerHTML = '';
 
-  // প্রতিটি অক্ষরকে একটি করে বক্সের ভেতর রাখা
   text.split('').forEach(char => {
-    const wrapper = document.createElement('span');
-    wrapper.className = 'char-box';
     const span = document.createElement('span');
     span.innerText = char === ' ' ? '\u00A0' : char;
     span.className = 'char';
-    wrapper.appendChild(span);
-    instructionList.appendChild(wrapper);
+    instructionList.appendChild(span);
   });
 
-  const chars = document.querySelectorAll('.char');
-
-  chars.forEach(char => {
+  // মাউস টাচ করলে অক্ষর ঘুরে যাবে (Flip/Rotate)
+  document.querySelectorAll('.char').forEach(char => {
     char.addEventListener('mouseenter', () => {
-      // পজিশন ফিক্সড না করে শুধু ট্রান্সফর্ম করছি, যাতে লাইন নড়বে না
-      const randomX = (Math.random() - 0.5) * 1000;
-      const randomY = (Math.random() - 0.5) * 1000;
+      // অক্ষরটি ৩৬০ ডিগ্রি ঘুরে যাবে এবং একটু বড় দেখাবে
+      char.style.transform = 'rotate(360deg) scale(1.5)';
       
-      char.style.position = 'fixed';
-      char.style.zIndex = '9999';
-      char.style.transform = `translate(${randomX}px, ${randomY}px) rotate(${Math.random() * 720}deg)`;
-      
+      // ০.৫ সেকেন্ড পর আবার স্বাভাবিক হয়ে যাবে
       setTimeout(() => {
-        char.style.position = 'relative';
-        char.style.transform = `translate(0, 0) rotate(0deg)`;
-      }, 2000);
+        char.style.transform = 'rotate(0deg) scale(1)';
+      }, 500);
     });
   });
 
