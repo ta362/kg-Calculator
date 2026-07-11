@@ -3,20 +3,20 @@
 <head>
   <style>
     body { font-family: 'Segoe UI', sans-serif; background: #1a1a2e; color: #e0e0e0; padding: 20px; text-align: center; overflow-x: hidden; }
-    .container { background: #16213e; max-width: 450px; margin: auto; padding: 25px; border-radius: 15px; box-shadow: 0 0 20px rgba(0,0,0,0.5); }
+    .container { background: #16213e; max-width: 450px; margin: auto; padding: 25px; border-radius: 15px; box-shadow: 0 0 20px rgba(0,0,0,0.5); position: relative; }
     h1 { color: #4ecca3; font-size: 1.6em; }
     
     #textContainer { 
       margin-bottom: 20px; text-align: left; background: #0f3460; padding: 15px; 
       border-radius: 10px; color: #ffffff; border: 1px solid #4ecca3;
-      user-select: none; /* লেখা সিলেক্ট হওয়া আটকাবে */
+      user-select: none; position: relative;
     }
     
     .scatter-text { 
       display: inline-block; 
-      transition: transform 0.5s ease-out; 
+      transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
       cursor: crosshair;
-      padding: 1px;
+      position: relative;
     }
     
     input { width: 90%; padding: 12px; margin: 8px 0; border: 1px solid #4ecca3; border-radius: 8px; background: #1a1a2e; color: white; }
@@ -52,7 +52,6 @@
 <script>
   const container = document.getElementById('instructionList');
   
-  // অক্ষরগুলোকে স্প্যানে ভাগ করা
   function wrapChars(element) {
     element.childNodes.forEach(node => {
       if (node.nodeType === 3) {
@@ -72,11 +71,9 @@
   }
   wrapChars(container);
 
-  // প্রতিটি অক্ষরের ওপর টাচ বা মাউস মুভমেন্ট হ্যান্ডেল করা
   const letters = document.querySelectorAll('.scatter-text');
-  
+
   const moveLetter = (e) => {
-    // মাউস এবং টাচ দুটোর জন্যই কাজ করবে
     const clientX = e.clientX || (e.touches ? e.touches[0].clientX : 0);
     const clientY = e.clientY || (e.touches ? e.touches[0].clientY : 0);
     
@@ -84,23 +81,24 @@
       const rect = letter.getBoundingClientRect();
       const dist = Math.sqrt(Math.pow(clientX - (rect.left + rect.width/2), 2) + Math.pow(clientY - (rect.top + rect.height/2), 2));
       
-      // যদি মাউস বা আঙুল অক্ষরের কাছে থাকে (৫০ পিক্সেল রেঞ্জ)
-      if (dist < 50) {
-        const x = (Math.random() - 0.5) * 600;
-        const y = (Math.random() - 0.5) * 600;
-        letter.style.transform = `translate(${x}px, ${y}px) rotate(${Math.random() * 360}deg)`;
+      if (dist < 40) {
+        // পুরো স্ক্রিন জুড়ে ছিটকে যাওয়ার জন্য হিসাব
+        const randomX = (Math.random() - 0.5) * window.innerWidth;
+        const randomY = (Math.random() - 0.5) * window.innerHeight;
         
-        // ১ সেকেন্ড পর আবার আগের জায়গায় ফিরে আসবে
+        letter.style.position = 'fixed'; // যাতে পুরো স্ক্রিনে যেতে পারে
+        letter.style.transform = `translate(${randomX}px, ${randomY}px) rotate(${Math.random() * 720}deg)`;
+        
         setTimeout(() => {
+          letter.style.position = 'static';
           letter.style.transform = `translate(0, 0) rotate(0deg)`;
-        }, 1000);
+        }, 1200);
       }
     });
   };
 
-  // মাউস ও টাচ ইভেন্ট লিসেনার
-  container.addEventListener('mousemove', moveLetter);
-  container.addEventListener('touchmove', moveLetter);
+  window.addEventListener('mousemove', moveLetter);
+  window.addEventListener('touchmove', moveLetter);
 
   function calculate() {
     const p = parseFloat(document.getElementById('pricePerKg').value) || 0;
