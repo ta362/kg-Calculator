@@ -5,26 +5,26 @@
   <style>
     body { font-family: 'Segoe UI', sans-serif; background: #1a1a2e; color: #e0e0e0; padding: 20px; text-align: center; margin: 0; min-height: 100vh; overflow-x: hidden; }
     
-    /* বড় ইন্টারফেস */
     .container { background: #16213e; max-width: 600px; margin: auto; padding: 40px; border-radius: 25px; box-shadow: 0 15px 40px rgba(0,0,0,0.6); }
     h1 { color: #4ecca3; font-size: 2.2em; margin-bottom: 30px; }
 
     #textContainer { 
       margin-bottom: 40px; text-align: left; background: #0f3460; padding: 25px; 
       border-radius: 20px; color: #ffffff; border: 2px solid #4ecca3;
-      min-height: 120px; position: relative; font-size: 1.2em; line-height: 1.6;
+      min-height: 120px; position: relative; font-size: 1.3em; line-height: 2;
     }
 
-    /* অক্ষরগুলো যেন বড় এবং স্পষ্ট হয় */
+    /* প্রতিটি অক্ষরের আলাদা ব্লক */
     .char { 
       display: inline-block; 
-      transition: transform 1s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      transition: transform 1.2s cubic-bezier(0.19, 1, 0.22, 1);
       cursor: crosshair;
       font-weight: bold;
       padding: 0 2px;
+      /* এটি খুব জরুরি: এটি মাউস ইভেন্টকে শুধুমাত্র অক্ষরের উপর সীমাবদ্ধ রাখবে */
+      pointer-events: auto; 
     }
 
-    /* বড় ইনপুট ফিল্ড */
     input { width: 95%; padding: 20px; margin: 15px 0; border: 2px solid #4ecca3; border-radius: 15px; background: #1a1a2e; color: white; outline: none; font-size: 1.2em; }
     .result-box { margin-top: 30px; padding: 25px; background: #0f3460; border-radius: 20px; text-align: left; color: #4ecca3; font-size: 1.3em; font-weight: bold; }
     span.val { color: #ff4757; }
@@ -64,33 +64,35 @@
 
   const chars = document.querySelectorAll('.char');
 
-  // টাচ বা মাউস মুভমেন্ট হ্যান্ডেল করা
-  const scatter = (e) => {
-    // টাচ বা মাউস পজিশন
-    const x = e.clientX || (e.touches ? e.touches[0].clientX : 0);
-    const y = e.clientY || (e.touches ? e.touches[0].clientY : 0);
-
-    chars.forEach(char => {
+  // প্রতিটি অক্ষরের ওপর আলাদা ইভেন্ট লিসেনার
+  chars.forEach(char => {
+    const triggerScatter = () => {
+      // অক্ষরের বর্তমান পজিশন নেওয়া
       const rect = char.getBoundingClientRect();
-      // হিটবক্স বাড়ানো হয়েছে (৭০ পিক্সেল) যাতে সহজে টাচ করা যায়
-      const dist = Math.sqrt(Math.pow(x - (rect.left + rect.width/2), 2) + Math.pow(y - (rect.top + rect.height/2), 2));
+      
+      char.style.position = 'fixed';
+      char.style.left = rect.left + 'px';
+      char.style.top = rect.top + 'px';
+      
+      // র‍্যান্ডম দিকে ছিটকে যাওয়া
+      const randomX = (Math.random() - 0.5) * 1200;
+      const randomY = (Math.random() - 0.5) * 1200;
+      char.style.transform = `translate(${randomX}px, ${randomY}px) rotate(${Math.random() * 720}deg)`;
+      
+      // ২ সেকেন্ড পর ফিরে আসা
+      setTimeout(() => {
+        char.style.position = 'static';
+        char.style.transform = `translate(0, 0) rotate(0deg)`;
+      }, 2000);
+    };
 
-      if (dist < 70) {
-        char.style.position = 'fixed';
-        char.style.left = rect.left + 'px';
-        char.style.top = rect.top + 'px';
-        char.style.transform = `translate(${(Math.random()-0.5)*1200}px, ${(Math.random()-0.5)*1200}px) rotate(${Math.random()*720}deg)`;
-        
-        setTimeout(() => {
-          char.style.position = 'static';
-          char.style.transform = `translate(0, 0) rotate(0deg)`;
-        }, 2000); // ২ সেকেন্ড সময় ধরে উড়বে
-      }
+    // মাউস এবং টাচ ইভেন্ট সরাসরি অক্ষরের ওপর
+    char.addEventListener('mouseenter', triggerScatter);
+    char.addEventListener('touchstart', (e) => {
+      e.preventDefault(); // অন্য কাজ বন্ধ করা
+      triggerScatter();
     });
-  };
-
-  window.addEventListener('mousemove', scatter);
-  window.addEventListener('touchmove', scatter);
+  });
 
   function calculate() {
     const p = parseFloat(document.getElementById('pricePerKg').value) || 0;
