@@ -7,21 +7,16 @@
     h1 { color: #4ecca3; font-size: 1.6em; }
     
     #textContainer { 
-      margin-bottom: 20px; 
-      text-align: left; 
-      background: #0f3460; 
-      padding: 15px; 
-      border-radius: 10px;
-      color: #ffffff;
-      border: 1px solid #4ecca3;
-      cursor: pointer;
+      margin-bottom: 20px; text-align: left; background: #0f3460; padding: 15px; 
+      border-radius: 10px; color: #ffffff; border: 1px solid #4ecca3;
+      user-select: none; /* লেখা সিলেক্ট হওয়া আটকাবে */
     }
     
-    /* প্রতিটি অক্ষরের জন্য স্মুথ ট্রানজিশন */
     .scatter-text { 
       display: inline-block; 
-      transition: transform 1.2s cubic-bezier(0.2, 0.8, 0.2, 1); 
-      will-change: transform;
+      transition: transform 0.5s ease-out; 
+      cursor: crosshair;
+      padding: 1px;
     }
     
     input { width: 90%; padding: 12px; margin: 8px 0; border: 1px solid #4ecca3; border-radius: 8px; background: #1a1a2e; color: white; }
@@ -75,26 +70,37 @@
       }
     });
   }
-
   wrapChars(container);
 
+  // প্রতিটি অক্ষরের ওপর টাচ বা মাউস মুভমেন্ট হ্যান্ডেল করা
   const letters = document.querySelectorAll('.scatter-text');
-
-  // মাউস নিলে ছড়িয়ে দেওয়া (পজিশন না বদলে শুধু ট্রান্সফর্ম ব্যবহার)
-  container.addEventListener('mouseover', () => {
+  
+  const moveLetter = (e) => {
+    // মাউস এবং টাচ দুটোর জন্যই কাজ করবে
+    const clientX = e.clientX || (e.touches ? e.touches[0].clientX : 0);
+    const clientY = e.clientY || (e.touches ? e.touches[0].clientY : 0);
+    
     letters.forEach(letter => {
-      const x = (Math.random() - 0.5) * 800; 
-      const y = (Math.random() - 0.5) * 800;
-      letter.style.transform = `translate(${x}px, ${y}px) rotate(${Math.random() * 360}deg)`;
+      const rect = letter.getBoundingClientRect();
+      const dist = Math.sqrt(Math.pow(clientX - (rect.left + rect.width/2), 2) + Math.pow(clientY - (rect.top + rect.height/2), 2));
+      
+      // যদি মাউস বা আঙুল অক্ষরের কাছে থাকে (৫০ পিক্সেল রেঞ্জ)
+      if (dist < 50) {
+        const x = (Math.random() - 0.5) * 600;
+        const y = (Math.random() - 0.5) * 600;
+        letter.style.transform = `translate(${x}px, ${y}px) rotate(${Math.random() * 360}deg)`;
+        
+        // ১ সেকেন্ড পর আবার আগের জায়গায় ফিরে আসবে
+        setTimeout(() => {
+          letter.style.transform = `translate(0, 0) rotate(0deg)`;
+        }, 1000);
+      }
     });
-  });
+  };
 
-  // মাউস সরালে ফিরে আসা
-  container.addEventListener('mouseout', () => {
-    letters.forEach(letter => {
-      letter.style.transform = `translate(0, 0) rotate(0deg)`;
-    });
-  });
+  // মাউস ও টাচ ইভেন্ট লিসেনার
+  container.addEventListener('mousemove', moveLetter);
+  container.addEventListener('touchmove', moveLetter);
 
   function calculate() {
     const p = parseFloat(document.getElementById('pricePerKg').value) || 0;
