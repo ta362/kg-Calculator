@@ -1,13 +1,28 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
   <style>
     body { font-family: 'Segoe UI', sans-serif; background: #f0f2f5; padding: 20px; text-align: center; }
     .container { background: #fff; max-width: 450px; margin: auto; padding: 25px; border-radius: 15px; box-shadow: 0 0 15px rgba(0,0,0,0.1); }
     
-    /* Scatter Text Styles */
-    .scatter-text { display: inline-block; transition: all 1s ease; cursor: pointer; position: relative; }
+    /* কন্টেইনারের সাইজ ঠিক রাখা হয়েছে যাতে লেখা সরলেও বক্স ছোট না হয় */
+    #textContainer { 
+      margin-bottom: 20px; 
+      font-size: 15px; 
+      font-weight: bold; 
+      background: #eef6ff; 
+      padding: 15px; 
+      border-radius: 10px;
+      min-height: 50px; /* বক্সের উচ্চতা ঠিক রাখা হলো */
+      position: relative;
+    }
+    
+    .scatter-text { 
+      display: inline-block; 
+      transition: all 0.8s ease; 
+      cursor: pointer; 
+      position: relative;
+    }
     
     input { width: 90%; padding: 10px; margin: 8px 0; border: 1px solid #ccc; border-radius: 8px; }
     .result-box { margin-top: 20px; padding: 15px; background: #e8f5e9; border-radius: 10px; font-weight: bold; text-align: left; }
@@ -19,9 +34,8 @@
 <div class="container">
   <h1>Price Calculator</h1>
   
-  <!-- টেক্সট যা ছড়িয়ে পড়বে -->
-  <div id="textContainer" style="margin-bottom: 20px; font-size: 14px; font-weight: bold; background: #eef6ff; padding: 10px;">
-    Hover over this text to scatter it: "How to use: Enter price, kg, and grams."
+  <div id="textContainer">
+    How to use: Enter price, KG, and grams to calculate.
   </div>
 
   <input type="number" id="pricePerKg" placeholder="Price per KG" oninput="calculate()">
@@ -40,7 +54,7 @@
   const text = container.innerText;
   container.innerHTML = '';
 
-  // প্রতিটি অক্ষরকে আলাদা span এ রূপান্তর
+  // টেক্সটকে স্প্যানে ভাগ করা
   text.split('').forEach(char => {
     const span = document.createElement('span');
     span.innerText = char;
@@ -52,9 +66,9 @@
 
   container.addEventListener('mouseover', () => {
     letters.forEach(letter => {
-      // প্রতিটি অক্ষরকে এলোমেলো দিকে পাঠানো
-      const x = (Math.random() - 0.5) * 500;
-      const y = (Math.random() - 0.5) * 500;
+      // র‍্যান্ডম দিকে ছিটকে যাওয়া
+      const x = (Math.random() - 0.5) * 300;
+      const y = (Math.random() - 0.5) * 300;
       letter.style.transform = `translate(${x}px, ${y}px) rotate(${Math.random() * 360}deg)`;
       letter.style.opacity = '0';
     });
