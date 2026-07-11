@@ -2,27 +2,26 @@
 <html lang="en">
 <head>
   <style>
-    body { font-family: 'Segoe UI', sans-serif; background: #1a1a2e; color: #e0e0e0; padding: 20px; text-align: center; margin: 0; min-height: 100vh; }
-    .container { background: #16213e; max-width: 450px; margin: auto; padding: 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); position: relative; z-index: 10; }
+    body { font-family: 'Segoe UI', sans-serif; background: #1a1a2e; color: #e0e0e0; padding: 20px; text-align: center; margin: 0; min-height: 100vh; overflow-x: hidden; }
+    .container { background: #16213e; max-width: 450px; margin: auto; padding: 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
     h1 { color: #4ecca3; margin-bottom: 25px; }
 
     /* Instructions Box */
     #textContainer { 
       margin-bottom: 30px; text-align: left; background: #0f3460; padding: 20px; 
       border-radius: 15px; color: #ffffff; border: 1px solid #4ecca3;
-      position: relative; height: 120px; /* নির্দিষ্ট উচ্চতা যাতে অক্ষর উড়লেও বক্স না নড়ে */
+      min-height: 100px; position: relative;
     }
 
-    /* অক্ষরগুলোর স্টাইল */
+    /* প্রতিটি অক্ষরের স্টাইল */
+    .char-wrapper { display: inline-block; position: relative; }
     .char { 
-      position: absolute; 
       display: inline-block; 
-      transition: all 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+      transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
       cursor: crosshair;
       font-weight: bold;
     }
 
-    /* Input Fields */
     .input-group { margin-bottom: 20px; }
     input { width: 90%; padding: 14px; margin: 10px 0; border: 1px solid #4ecca3; border-radius: 10px; background: #1a1a2e; color: white; outline: none; }
     .result-box { margin-top: 25px; padding: 20px; background: #0f3460; border-radius: 15px; text-align: left; color: #4ecca3; font-weight: bold; }
@@ -52,18 +51,16 @@
 </div>
 
 <script>
-  const container = document.getElementById('textContainer');
-  const text = "How to use: 1. Enter price per KG. 2. Enter total KG. 3. Enter grams to see price.";
-  
-  // অক্ষরগুলো তৈরি করা
-  text.split('').forEach((char, i) => {
+  const instructionList = document.getElementById('instructionList');
+  const text = instructionList.innerText;
+  instructionList.innerHTML = '';
+
+  // টেক্সটকে অক্ষরের স্প্যানে রূপান্তর
+  text.split('').forEach(char => {
     const span = document.createElement('span');
-    span.innerText = char;
+    span.innerText = char === ' ' ? '\u00A0' : char; // স্পেস থাকলে স্পেস রাখা
     span.className = 'char';
-    // অক্ষরের প্রাথমিক পজিশন সেট করা (বক্সের ভেতর)
-    span.style.left = (20 + (i * 12)) + 'px'; 
-    span.style.top = '20px';
-    container.appendChild(span);
+    instructionList.appendChild(span);
   });
 
   const chars = document.querySelectorAll('.char');
@@ -75,11 +72,16 @@
 
     chars.forEach(char => {
       const rect = char.getBoundingClientRect();
-      const dist = Math.sqrt(Math.pow(x - rect.left, 2) + Math.pow(y - rect.top, 2));
+      const dist = Math.sqrt(Math.pow(x - (rect.left + rect.width/2), 2) + Math.pow(y - (rect.top + rect.height/2), 2));
 
-      if (dist < 40) {
-        char.style.transform = `translate(${(Math.random()-0.5)*800}px, ${(Math.random()-0.5)*800}px) rotate(${Math.random()*360}deg)`;
+      if (dist < 30) { // মাউস অক্ষরের কাছাকাছি থাকলে
+        char.style.position = 'fixed'; // উড়ানোর জন্য ফিক্সড করা
+        char.style.left = rect.left + 'px';
+        char.style.top = rect.top + 'px';
+        char.style.transform = `translate(${(Math.random()-0.5)*1000}px, ${(Math.random()-0.5)*1000}px) rotate(${Math.random()*720}deg)`;
+        
         setTimeout(() => {
+          char.style.position = 'static'; // আবার আগের জায়গায় ফিরে আসা
           char.style.transform = `translate(0, 0) rotate(0deg)`;
         }, 1500);
       }
