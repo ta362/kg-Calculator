@@ -13,14 +13,27 @@
       min-height: 120px; font-size: 1.3em; line-height: 2;
     }
 
-    /* অক্ষরগুলোর জন্য বিশেষ ইফেক্ট */
+    /* ঝিরঝিরি এবং ঘোরার জন্য এনিমেশন */
     .char { 
       display: inline-block; 
-      transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+      transition: transform 0.3s ease;
       cursor: pointer;
       font-weight: bold;
-      padding: 0 2px;
+      padding: 0 1px;
       user-select: none;
+    }
+
+    /* যখন টাচ হবে তখন এই ক্লাসটি যুক্ত হবে */
+    .shimmer {
+      animation: vibrate 0.3s linear infinite;
+    }
+
+    @keyframes vibrate {
+      0% { transform: translate(2px, 2px) rotate(0deg); }
+      25% { transform: translate(-2px, -2px) rotate(-5deg); }
+      50% { transform: translate(2px, -2px) rotate(5deg); }
+      75% { transform: translate(-2px, 2px) rotate(-5deg); }
+      100% { transform: translate(2px, 2px) rotate(0deg); }
     }
 
     input { width: 95%; padding: 20px; margin: 15px 0; border: 2px solid #4ecca3; border-radius: 15px; background: #1a1a2e; color: white; outline: none; font-size: 1.2em; }
@@ -60,16 +73,14 @@
     instructionList.appendChild(span);
   });
 
-  // মাউস টাচ করলে অক্ষর ঘুরে যাবে (Flip/Rotate)
+  // মাউস বা টাচ করলে ঝিরঝিরি এনিমেশন
   document.querySelectorAll('.char').forEach(char => {
     char.addEventListener('mouseenter', () => {
-      // অক্ষরটি ৩৬০ ডিগ্রি ঘুরে যাবে এবং একটু বড় দেখাবে
-      char.style.transform = 'rotate(360deg) scale(1.5)';
-      
-      // ০.৫ সেকেন্ড পর আবার স্বাভাবিক হয়ে যাবে
+      char.classList.add('shimmer');
+      // ০.৬ সেকেন্ড পর ঝিরঝিরি বন্ধ হবে
       setTimeout(() => {
-        char.style.transform = 'rotate(0deg) scale(1)';
-      }, 500);
+        char.classList.remove('shimmer');
+      }, 600);
     });
   });
 
