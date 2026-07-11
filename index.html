@@ -3,75 +3,18 @@
 <head>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <style>
-    /* মোবাইলের জন্য ফুল স্ক্রিন এবং পারফেক্ট সাইজ */
-    body { 
-      font-family: 'Courier New', Courier, monospace; 
-      background: #050505; 
-      color: #0ff; 
-      padding: 10px; 
-      margin: 0; 
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-    
-    .container { 
-      background: rgba(10, 10, 20, 0.9); 
-      width: 95%; /* মোবাইলের জন্য ফুল উইডথ */
-      max-width: 600px;
-      margin-top: 20px; 
-      padding: 25px; 
-      border: 3px solid #0ff;
-      border-radius: 20px;
-      box-shadow: 0 0 20px #0ff;
-      box-sizing: border-box;
-    }
-    
+    body { font-family: 'Courier New', Courier, monospace; background: #050505; color: #0ff; padding: 10px; margin: 0; min-height: 100vh; display: flex; flex-direction: column; align-items: center; }
+    .container { background: rgba(10, 10, 20, 0.9); width: 95%; max-width: 600px; margin-top: 20px; padding: 25px; border: 3px solid #0ff; border-radius: 20px; box-shadow: 0 0 20px #0ff; box-sizing: border-box; }
     h1 { color: #f0f; text-shadow: 0 0 10px #f0f; font-size: 1.8em; margin-bottom: 20px; }
-
-    #textContainer { 
-      margin-bottom: 25px; text-align: left; background: #000; padding: 15px; 
-      border: 2px solid #f0f; color: #0f0; font-size: 1.2em;
-      box-shadow: inset 0 0 10px #0f0;
-      word-wrap: break-word;
-    }
-
-    .char { 
-      display: inline-block; 
-      cursor: pointer;
-      font-weight: bold;
-      animation: auto-vibrate 3s ease-in-out infinite;
-    }
-
-    /* ইনপুট ফিল্ড মোবাইলে বড় ও সহজলভ্য */
-    input { 
-      width: 100%; padding: 18px; margin: 10px 0; 
-      background: #000; border: 2px solid #0ff; 
-      color: #0ff; text-align: center; font-size: 1.2em;
-      box-shadow: 0 0 5px #0ff;
-      box-sizing: border-box;
-    }
-
-    .result-box { 
-      margin-top: 25px; padding: 20px; border: 2px solid #f0f;
-      background: rgba(255, 0, 255, 0.1); color: #f0f; font-size: 1.3em;
-    }
-
-    @keyframes auto-vibrate {
-      0%, 100% { transform: translate(0, 0); }
-      50% { transform: translate(1px, -1px); }
-    }
-
-    .intense-shimmer {
-      animation: intense-vibrate 0.2s linear infinite !important;
-      color: #fff;
-    }
-
-    @keyframes intense-vibrate {
-      0%, 100% { transform: translate(3px, 3px) scale(1.3); text-shadow: 0 0 10px #fff; }
-      50% { transform: translate(-3px, -3px) scale(1.3); }
-    }
+    #textContainer { margin-bottom: 25px; text-align: left; background: #000; padding: 15px; border: 2px solid #f0f; color: #0f0; font-size: 1.2em; box-shadow: inset 0 0 10px #0f0; word-wrap: break-word; }
+    .char { display: inline-block; cursor: pointer; font-weight: bold; animation: auto-vibrate 3s ease-in-out infinite; }
+    input { width: 100%; padding: 18px; margin: 10px 0; background: #000; border: 2px solid #0ff; color: #0ff; text-align: center; font-size: 1.2em; box-shadow: 0 0 5px #0ff; box-sizing: border-box; }
+    .result-box { margin-top: 25px; padding: 20px; border: 2px solid #f0f; background: rgba(255, 0, 255, 0.1); color: #f0f; font-size: 1.3em; }
+    .total-price-box { margin-top: 15px; padding: 15px; border: 2px solid #0ff; background: rgba(0, 255, 255, 0.1); color: #0ff; font-size: 1.5em; font-weight: bold; text-align: center; }
+    
+    @keyframes auto-vibrate { 0%, 100% { transform: translate(0, 0); } 50% { transform: translate(1px, -1px); } }
+    .intense-shimmer { animation: intense-vibrate 0.2s linear infinite !important; color: #fff; }
+    @keyframes intense-vibrate { 0%, 100% { transform: translate(3px, 3px) scale(1.3); text-shadow: 0 0 10px #fff; } 50% { transform: translate(-3px, -3px) scale(1.3); } }
   </style>
 </head>
 <body>
@@ -92,13 +35,16 @@
     <div>PRICE_GRAMS: <span id="resGram">0.00</span></div>
     <div>UNIT_PRICE: <span id="resOneGram">0.00</span></div>
   </div>
+
+  <div class="total-price-box">
+    TOTAL_PRICE: <span id="resTotal">0.00</span>
+  </div>
 </div>
 
 <script>
   const instructionList = document.getElementById('instructionList');
   const text = instructionList.innerText;
   instructionList.innerHTML = '';
-
   text.split('').forEach(char => {
     const span = document.createElement('span');
     span.innerText = char === ' ' ? '\u00A0' : char;
@@ -107,25 +53,23 @@
   });
 
   document.querySelectorAll('.char').forEach(char => {
-    // টাচ বা মাউস টাচ করলে ঝিরঝিরি
-    char.addEventListener('mouseenter', () => {
-      char.classList.add('intense-shimmer');
-      setTimeout(() => char.classList.remove('intense-shimmer'), 800);
-    });
-    // মোবাইলে টাচ করলে
-    char.addEventListener('touchstart', () => {
-      char.classList.add('intense-shimmer');
-      setTimeout(() => char.classList.remove('intense-shimmer'), 800);
-    });
+    char.addEventListener('mouseenter', () => { char.classList.add('intense-shimmer'); setTimeout(() => char.classList.remove('intense-shimmer'), 800); });
+    char.addEventListener('touchstart', () => { char.classList.add('intense-shimmer'); setTimeout(() => char.classList.remove('intense-shimmer'), 800); });
   });
 
   function calculate() {
     const p = parseFloat(document.getElementById('pricePerKg').value) || 0;
     const k = parseFloat(document.getElementById('qtyKg').value) || 0;
     const g = parseFloat(document.getElementById('qtyGram').value) || 0;
-    document.getElementById('resKg').innerHTML = (p * k).toFixed(2);
-    document.getElementById('resGram').innerHTML = ((p / 1000) * g).toFixed(2);
+    
+    const priceForKg = p * k;
+    const priceForGrams = (p / 1000) * g;
+    const total = priceForKg + priceForGrams;
+
+    document.getElementById('resKg').innerHTML = priceForKg.toFixed(2);
+    document.getElementById('resGram').innerHTML = priceForGrams.toFixed(2);
     document.getElementById('resOneGram').innerHTML = (p / 1000).toFixed(2);
+    document.getElementById('resTotal').innerHTML = total.toFixed(2);
   }
 </script>
 
