@@ -2,21 +2,22 @@
 <html lang="en">
 <head>
   <style>
-    body { font-family: 'Segoe UI', sans-serif; background: #1a1a2e; color: #e0e0e0; padding: 20px; text-align: center; overflow-x: hidden; }
-    .container { background: #16213e; max-width: 450px; margin: auto; padding: 25px; border-radius: 15px; box-shadow: 0 0 20px rgba(0,0,0,0.5); position: relative; }
+    body { font-family: 'Segoe UI', sans-serif; background: #1a1a2e; color: #e0e0e0; padding: 20px; text-align: center; overflow-x: hidden; margin: 0; }
+    .container { background: #16213e; max-width: 450px; margin: auto; padding: 25px; border-radius: 15px; box-shadow: 0 0 20px rgba(0,0,0,0.5); }
     h1 { color: #4ecca3; font-size: 1.6em; }
     
     #textContainer { 
       margin-bottom: 20px; text-align: left; background: #0f3460; padding: 15px; 
       border-radius: 10px; color: #ffffff; border: 1px solid #4ecca3;
-      user-select: none; position: relative;
+      user-select: none;
     }
     
     .scatter-text { 
       display: inline-block; 
-      transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+      transition: transform 0.4s ease-out; 
       cursor: crosshair;
-      position: relative;
+      /* এটি অক্ষরগুলোকে আলাদা লেয়ারে রাখবে যাতে পেজ ল্যাগ না করে */
+      will-change: transform; 
     }
     
     input { width: 90%; padding: 12px; margin: 8px 0; border: 1px solid #4ecca3; border-radius: 8px; background: #1a1a2e; color: white; }
@@ -52,6 +53,7 @@
 <script>
   const container = document.getElementById('instructionList');
   
+  // অক্ষর আলাদা করা
   function wrapChars(element) {
     element.childNodes.forEach(node => {
       if (node.nodeType === 3) {
@@ -73,6 +75,7 @@
 
   const letters = document.querySelectorAll('.scatter-text');
 
+  // ল্যাগ কমানোর জন্য ইভেন্ট হ্যান্ডলার
   const moveLetter = (e) => {
     const clientX = e.clientX || (e.touches ? e.touches[0].clientX : 0);
     const clientY = e.clientY || (e.touches ? e.touches[0].clientY : 0);
@@ -81,24 +84,21 @@
       const rect = letter.getBoundingClientRect();
       const dist = Math.sqrt(Math.pow(clientX - (rect.left + rect.width/2), 2) + Math.pow(clientY - (rect.top + rect.height/2), 2));
       
-      if (dist < 40) {
-        // পুরো স্ক্রিন জুড়ে ছিটকে যাওয়ার জন্য হিসাব
-        const randomX = (Math.random() - 0.5) * window.innerWidth;
-        const randomY = (Math.random() - 0.5) * window.innerHeight;
-        
-        letter.style.position = 'fixed'; // যাতে পুরো স্ক্রিনে যেতে পারে
-        letter.style.transform = `translate(${randomX}px, ${randomY}px) rotate(${Math.random() * 720}deg)`;
+      if (dist < 60) {
+        // শুধু ট্রান্সফর্ম ব্যবহার করা হয়েছে, পজিশন নয়। এতে পেজ কাঁপবে না।
+        const randomX = (Math.random() - 0.5) * 200;
+        const randomY = (Math.random() - 0.5) * 200;
+        letter.style.transform = `translate(${randomX}px, ${randomY}px)`;
         
         setTimeout(() => {
-          letter.style.position = 'static';
-          letter.style.transform = `translate(0, 0) rotate(0deg)`;
-        }, 1200);
+          letter.style.transform = `translate(0, 0)`;
+        }, 800);
       }
     });
   };
 
-  window.addEventListener('mousemove', moveLetter);
-  window.addEventListener('touchmove', moveLetter);
+  document.getElementById('textContainer').addEventListener('mousemove', moveLetter);
+  document.getElementById('textContainer').addEventListener('touchmove', moveLetter);
 
   function calculate() {
     const p = parseFloat(document.getElementById('pricePerKg').value) || 0;
