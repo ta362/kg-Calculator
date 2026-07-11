@@ -3,77 +3,48 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>KG Price Calculator</title>
+  <title>All-in-One Price Calculator</title>
   <style>
-    body { font-family: 'Segoe UI', sans-serif; background: #f0f2f5; color: #333; padding: 20px; text-align: center; }
-    .container { background: #fff; max-width: 500px; margin: auto; padding: 20px; border-radius: 15px; box-shadow: 0 0 15px rgba(0,0,0,0.1); }
+    body { font-family: 'Segoe UI', sans-serif; background: #f0f2f5; padding: 20px; text-align: center; }
+    .container { background: #fff; max-width: 450px; margin: auto; padding: 25px; border-radius: 15px; box-shadow: 0 0 15px rgba(0,0,0,0.1); }
     h1 { color: #00b894; font-size: 1.5em; }
-    .instructions { background: #e8f5e9; padding: 15px; border-radius: 10px; text-align: left; font-size: 14px; margin-bottom: 20px; border: 1px solid #c8e6c9; }
-    .box { border: 1px solid #ddd; padding: 15px; margin: 15px 0; border-radius: 10px; background: #f9f9f9; text-align: left; }
-    input { width: 90%; padding: 8px; margin: 5px 0; border: 1px solid #ccc; border-radius: 5px; display: block; }
-    button { background: #00b894; color: white; border: none; padding: 10px; width: 100%; border-radius: 5px; cursor: pointer; margin-top: 5px; }
-    .result { font-weight: bold; color: #d63031; margin-top: 10px; }
+    input { width: 90%; padding: 10px; margin: 8px 0; border: 1px solid #ccc; border-radius: 8px; }
+    .result-box { margin-top: 20px; padding: 15px; background: #e8f5e9; border-radius: 10px; font-weight: bold; }
+    .result-text { margin: 5px 0; color: #333; }
+    span { color: #d63031; }
   </style>
 </head>
 <body>
 
 <div class="container">
-  <h1>KG Price Calculator</h1>
+  <h1>Price Calculator</h1>
+  
+  <input type="number" id="pricePerKg" placeholder="Enter Price per KG (e.g., 1300)" oninput="calculate()">
+  <input type="number" id="qtyKg" placeholder="Enter Weight in KG" oninput="calculate()">
+  <input type="number" id="qtyGram" placeholder="Enter Weight in Grams" oninput="calculate()">
 
-  <div class="instructions">
-    <strong>How to use:</strong>
-    <ul>
-      <li><strong>Total Price for KGs:</strong> Enter price per KG and the number of KGs.</li>
-      <li><strong>Price for X Grams:</strong> Enter price per KG and the specific weight in grams.</li>
-      <li><strong>Price per 1 Gram:</strong> Enter price per KG to see the cost of a single gram.</li>
-    </ul>
-  </div>
-
-  <!-- 1. Total Price for KGs -->
-  <div class="box">
-    <strong>1. Price for total KG</strong>
-    <input type="number" id="priceKg" placeholder="Price per KG">
-    <input type="number" id="qtyKg" placeholder="Total KG">
-    <button onclick="calcTotal()">Calculate</button>
-    <div class="result" id="resTotal"></div>
-  </div>
-
-  <!-- 2. Price for Grams -->
-  <div class="box">
-    <strong>2. Price for X Grams</strong>
-    <input type="number" id="priceKg2" placeholder="Price per KG">
-    <input type="number" id="qtyGram" placeholder="Quantity in Grams">
-    <button onclick="calcGram()">Calculate</button>
-    <div class="result" id="resGram"></div>
-  </div>
-
-  <!-- 3. Price per Gram -->
-  <div class="box">
-    <strong>3. Price per 1 Gram</strong>
-    <input type="number" id="priceKg3" placeholder="Price per KG">
-    <button onclick="calcOneGram()">Calculate</button>
-    <div class="result" id="resOneGram"></div>
+  <div class="result-box">
+    <div class="result-text">Price for KG: <span id="resKg">0</span></div>
+    <div class="result-text">Price for Grams: <span id="resGram">0</span></div>
+    <div class="result-text">Price per 1 Gram: <span id="resOneGram">0</span></div>
   </div>
 </div>
 
 <script>
-  function calcTotal() {
-    let price = document.getElementById('priceKg').value;
-    let qty = document.getElementById('qtyKg').value;
-    document.getElementById('resTotal').innerHTML = `Total Price: ${price * qty} units`;
-  }
+  function calculate() {
+    const price = parseFloat(document.getElementById('pricePerKg').value) || 0;
+    const kg = parseFloat(document.getElementById('qtyKg').value) || 0;
+    const gram = parseFloat(document.getElementById('qtyGram').value) || 0;
 
-  function calcGram() {
-    let price = document.getElementById('priceKg2').value;
-    let gram = document.getElementById('qtyGram').value;
-    let total = (price / 1000) * gram;
-    document.getElementById('resGram').innerHTML = `Price for ${gram}g: ${total.toFixed(2)} units`;
-  }
+    // Calculate
+    const totalKgPrice = price * kg;
+    const totalGramPrice = (price / 1000) * gram;
+    const perGramPrice = price / 1000;
 
-  function calcOneGram() {
-    let price = document.getElementById('priceKg3').value;
-    let oneGram = price / 1000;
-    document.getElementById('resOneGram').innerHTML = `Price per 1g: ${oneGram.toFixed(2)} units`;
+    // Update Display
+    document.getElementById('resKg').innerHTML = totalKgPrice.toFixed(2);
+    document.getElementById('resGram').innerHTML = totalGramPrice.toFixed(2);
+    document.getElementById('resOneGram').innerHTML = perGramPrice.toFixed(2);
   }
 </script>
 
