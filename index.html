@@ -3,7 +3,7 @@
 <head>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
-    body { font-family: 'Segoe UI', sans-serif; background: #1a1a2e; color: #e0e0e0; padding: 20px; text-align: center; margin: 0; min-height: 100vh; overflow-x: hidden; }
+    body { font-family: 'Segoe UI', sans-serif; background: #1a1a2e; color: #e0e0e0; padding: 20px; text-align: center; margin: 0; min-height: 100vh; }
     .container { background: #16213e; max-width: 600px; margin: auto; padding: 40px; border-radius: 25px; box-shadow: 0 15px 40px rgba(0,0,0,0.6); }
     h1 { color: #4ecca3; font-size: 2.2em; margin-bottom: 30px; }
 
@@ -13,27 +13,32 @@
       min-height: 120px; font-size: 1.3em; line-height: 2;
     }
 
-    /* ঝিরঝিরি এবং ঘোরার জন্য এনিমেশন */
+    /* অক্ষরগুলোর অটোমেটিক হালকা ঝিরঝির */
     .char { 
       display: inline-block; 
-      transition: transform 0.3s ease;
       cursor: pointer;
       font-weight: bold;
       padding: 0 1px;
       user-select: none;
+      animation: auto-vibrate 3s ease-in-out infinite;
     }
 
-    /* যখন টাচ হবে তখন এই ক্লাসটি যুক্ত হবে */
-    .shimmer {
-      animation: vibrate 0.3s linear infinite;
+    @keyframes auto-vibrate {
+      0%, 100% { transform: translate(0, 0); }
+      50% { transform: translate(0.5px, -0.5px); }
     }
 
-    @keyframes vibrate {
-      0% { transform: translate(2px, 2px) rotate(0deg); }
-      25% { transform: translate(-2px, -2px) rotate(-5deg); }
-      50% { transform: translate(2px, -2px) rotate(5deg); }
-      75% { transform: translate(-2px, 2px) rotate(-5deg); }
-      100% { transform: translate(2px, 2px) rotate(0deg); }
+    /* মাউস লাগলে শক্তিশালী ঝিরঝির */
+    .intense-shimmer {
+      animation: intense-vibrate 0.2s linear infinite !important;
+    }
+
+    @keyframes intense-vibrate {
+      0% { transform: translate(3px, 3px) rotate(0deg) scale(1.2); }
+      25% { transform: translate(-3px, -3px) rotate(-10deg) scale(1.2); }
+      50% { transform: translate(3px, -3px) rotate(10deg) scale(1.2); }
+      75% { transform: translate(-3px, 3px) rotate(-10deg) scale(1.2); }
+      100% { transform: translate(3px, 3px) rotate(0deg) scale(1.2); }
     }
 
     input { width: 95%; padding: 20px; margin: 15px 0; border: 2px solid #4ecca3; border-radius: 15px; background: #1a1a2e; color: white; outline: none; font-size: 1.2em; }
@@ -73,14 +78,14 @@
     instructionList.appendChild(span);
   });
 
-  // মাউস বা টাচ করলে ঝিরঝিরি এনিমেশন
   document.querySelectorAll('.char').forEach(char => {
+    // মাউস টাচ করলে তীব্রতা বেড়ে যাবে
     char.addEventListener('mouseenter', () => {
-      char.classList.add('shimmer');
-      // ০.৬ সেকেন্ড পর ঝিরঝিরি বন্ধ হবে
+      char.classList.add('intense-shimmer');
+      // ১ সেকেন্ড পর আবার অটোমেটিক মোডে ফিরে যাবে
       setTimeout(() => {
-        char.classList.remove('shimmer');
-      }, 600);
+        char.classList.remove('intense-shimmer');
+      }, 1000);
     });
   });
 
