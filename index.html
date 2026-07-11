@@ -2,29 +2,31 @@
 <html lang="en">
 <head>
   <style>
-    body { font-family: 'Segoe UI', sans-serif; background: #f0f2f5; padding: 20px; text-align: center; overflow-x: hidden; }
-    .container { background: #fff; max-width: 450px; margin: auto; padding: 25px; border-radius: 15px; box-shadow: 0 0 15px rgba(0,0,0,0.1); position: relative; }
+    body { font-family: 'Segoe UI', sans-serif; background: #1a1a2e; color: #e0e0e0; padding: 20px; text-align: center; overflow-x: hidden; }
+    .container { background: #16213e; max-width: 450px; margin: auto; padding: 25px; border-radius: 15px; box-shadow: 0 0 20px rgba(0,0,0,0.5); }
+    h1 { color: #4ecca3; font-size: 1.6em; }
     
-    /* বড় লিস্ট এবং টেক্সট স্টাইল */
     #textContainer { 
       margin-bottom: 20px; 
       text-align: left; 
-      font-weight: bold; 
-      background: #eef6ff; 
+      background: #0f3460; 
       padding: 15px; 
       border-radius: 10px;
+      color: #ffffff;
+      border: 1px solid #4ecca3;
+      cursor: pointer;
     }
     
+    /* প্রতিটি অক্ষরের জন্য স্মুথ ট্রানজিশন */
     .scatter-text { 
       display: inline-block; 
-      transition: all 1.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
-      cursor: pointer; 
-      position: relative;
+      transition: transform 1.2s cubic-bezier(0.2, 0.8, 0.2, 1); 
+      will-change: transform;
     }
     
-    input { width: 90%; padding: 10px; margin: 8px 0; border: 1px solid #ccc; border-radius: 8px; }
-    .result-box { margin-top: 20px; padding: 15px; background: #e8f5e9; border-radius: 10px; font-weight: bold; text-align: left; }
-    span.val { color: #d63031; }
+    input { width: 90%; padding: 12px; margin: 8px 0; border: 1px solid #4ecca3; border-radius: 8px; background: #1a1a2e; color: white; }
+    .result-box { margin-top: 20px; padding: 15px; background: #0f3460; border-radius: 10px; font-weight: bold; text-align: left; color: #4ecca3; }
+    span.val { color: #ff4757; }
   </style>
 </head>
 <body>
@@ -34,7 +36,7 @@
   
   <div id="textContainer">
     <strong>How to use:</strong>
-    <ol id="instructionList" style="padding-left: 20px;">
+    <ol id="instructionList" style="padding-left: 20px; margin: 5px 0;">
       <li>Enter the Price per KG.</li>
       <li>Enter the Total KG.</li>
       <li>Enter Grams to see price.</li>
@@ -53,21 +55,21 @@
 </div>
 
 <script>
-  // সব টেক্সটকে স্প্যানে রূপান্তর করা
   const container = document.getElementById('instructionList');
   
+  // অক্ষরগুলোকে স্প্যানে ভাগ করা
   function wrapChars(element) {
     element.childNodes.forEach(node => {
-      if (node.nodeType === 3) { // যদি টেক্সট নোড হয়
+      if (node.nodeType === 3) {
         const text = node.nodeValue;
-        const spanContainer = document.createElement('span');
+        const spanWrapper = document.createElement('span');
         text.split('').forEach(char => {
           const span = document.createElement('span');
           span.innerText = char;
           span.className = 'scatter-text';
-          spanContainer.appendChild(span);
+          spanWrapper.appendChild(span);
         });
-        node.replaceWith(spanContainer);
+        node.replaceWith(spanWrapper);
       } else {
         wrapChars(node);
       }
@@ -78,21 +80,18 @@
 
   const letters = document.querySelectorAll('.scatter-text');
 
-  // মাউস নিলে ছড়িয়ে পড়বে
+  // মাউস নিলে ছড়িয়ে দেওয়া (পজিশন না বদলে শুধু ট্রান্সফর্ম ব্যবহার)
   container.addEventListener('mouseover', () => {
     letters.forEach(letter => {
-      const x = (Math.random() - 0.5) * 1000; // পুরো পেজ জুড়ে ছড়িয়ে যাবে
-      const y = (Math.random() - 0.5) * 1000;
-      letter.style.position = 'fixed';
-      letter.style.transform = `translate(${x}px, ${y}px) rotate(${Math.random() * 720}deg)`;
-      letter.style.zIndex = '9999';
+      const x = (Math.random() - 0.5) * 800; 
+      const y = (Math.random() - 0.5) * 800;
+      letter.style.transform = `translate(${x}px, ${y}px) rotate(${Math.random() * 360}deg)`;
     });
   });
 
-  // মাউস সরালে ফিরে আসবে
+  // মাউস সরালে ফিরে আসা
   container.addEventListener('mouseout', () => {
     letters.forEach(letter => {
-      letter.style.position = 'static';
       letter.style.transform = `translate(0, 0) rotate(0deg)`;
     });
   });
