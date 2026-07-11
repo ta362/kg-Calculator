@@ -8,6 +8,7 @@
     body { font-family: 'Segoe UI', sans-serif; background: #f0f2f5; color: #333; padding: 20px; text-align: center; }
     .container { background: #fff; max-width: 500px; margin: auto; padding: 20px; border-radius: 15px; box-shadow: 0 0 15px rgba(0,0,0,0.1); }
     h1 { color: #00b894; font-size: 1.5em; }
+    .instructions { background: #e8f5e9; padding: 15px; border-radius: 10px; text-align: left; font-size: 14px; margin-bottom: 20px; border: 1px solid #c8e6c9; }
     .box { border: 1px solid #ddd; padding: 15px; margin: 15px 0; border-radius: 10px; background: #f9f9f9; text-align: left; }
     input { width: 90%; padding: 8px; margin: 5px 0; border: 1px solid #ccc; border-radius: 5px; display: block; }
     button { background: #00b894; color: white; border: none; padding: 10px; width: 100%; border-radius: 5px; cursor: pointer; margin-top: 5px; }
@@ -19,6 +20,16 @@
 <div class="container">
   <h1>KG Price Calculator</h1>
 
+  <div class="instructions">
+    <strong>How to use:</strong>
+    <ul>
+      <li><strong>Total Price for KGs:</strong> Enter price per KG and the number of KGs.</li>
+      <li><strong>Price for X Grams:</strong> Enter price per KG and the specific weight in grams.</li>
+      <li><strong>Price per 1 Gram:</strong> Enter price per KG to see the cost of a single gram.</li>
+    </ul>
+  </div>
+
+  <!-- 1. Total Price for KGs -->
   <div class="box">
     <strong>1. Price for total KG</strong>
     <input type="number" id="priceKg" placeholder="Price per KG">
@@ -27,6 +38,7 @@
     <div class="result" id="resTotal"></div>
   </div>
 
+  <!-- 2. Price for Grams -->
   <div class="box">
     <strong>2. Price for X Grams</strong>
     <input type="number" id="priceKg2" placeholder="Price per KG">
@@ -35,6 +47,7 @@
     <div class="result" id="resGram"></div>
   </div>
 
+  <!-- 3. Price per Gram -->
   <div class="box">
     <strong>3. Price per 1 Gram</strong>
     <input type="number" id="priceKg3" placeholder="Price per KG">
