@@ -2,31 +2,16 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Interactive Price Calculator</title>
   <style>
     body { font-family: 'Segoe UI', sans-serif; background: #f0f2f5; padding: 20px; text-align: center; }
-    .container { background: #fff; max-width: 450px; margin: auto; padding: 25px; border-radius: 15px; box-shadow: 0 0 15px rgba(0,0,0,0.1); position: relative; }
-    h1 { color: #00b894; font-size: 1.5em; }
+    .container { background: #fff; max-width: 450px; margin: auto; padding: 25px; border-radius: 15px; box-shadow: 0 0 15px rgba(0,0,0,0.1); }
     
-    /* Interactive Instructions Styling */
-    .usage-guide { 
-      background: #eef6ff; 
-      padding: 15px; 
-      border-radius: 10px; 
-      text-align: left; 
-      font-size: 13px; 
-      margin-bottom: 20px; 
-      border-left: 5px solid #00b894;
-      transition: all 0.8s ease; /* স্মুথ ট্রানজিশন */
-      cursor: pointer;
-      position: relative;
-    }
-
+    /* Scatter Text Styles */
+    .scatter-text { display: inline-block; transition: all 1s ease; cursor: pointer; position: relative; }
+    
     input { width: 90%; padding: 10px; margin: 8px 0; border: 1px solid #ccc; border-radius: 8px; }
     .result-box { margin-top: 20px; padding: 15px; background: #e8f5e9; border-radius: 10px; font-weight: bold; text-align: left; }
-    .result-text { margin: 8px 0; color: #333; }
-    span { color: #d63031; }
+    span.val { color: #d63031; }
   </style>
 </head>
 <body>
@@ -34,15 +19,9 @@
 <div class="container">
   <h1>Price Calculator</h1>
   
-  <!-- Interactive Guide -->
-  <div class="usage-guide" id="guide">
-    <strong>How to use (Hover me!):</strong>
-    <ol id="guideList" style="padding-left: 20px; margin: 5px 0;">
-      <li>Enter the <b>Price per KG</b>.</li>
-      <li>Enter the <b>Total KG</b> to see the price for that weight.</li>
-      <li>Enter <b>Grams</b> to see the price for a specific amount.</li>
-      <li>The calculator works <b>automatically</b>!</li>
-    </ol>
+  <!-- টেক্সট যা ছড়িয়ে পড়বে -->
+  <div id="textContainer" style="margin-bottom: 20px; font-size: 14px; font-weight: bold; background: #eef6ff; padding: 10px;">
+    Hover over this text to scatter it: "How to use: Enter price, kg, and grams."
   </div>
 
   <input type="number" id="pricePerKg" placeholder="Price per KG" oninput="calculate()">
@@ -50,40 +29,52 @@
   <input type="number" id="qtyGram" placeholder="Grams" oninput="calculate()">
 
   <div class="result-box">
-    <div class="result-text">Price for KGs: <span id="resKg">0</span></div>
-    <div class="result-text">Price for Grams: <span id="resGram">0</span></div>
-    <div class="result-text">Price per 1 Gram: <span id="resOneGram">0</span></div>
+    <div>Price for KGs: <span class="val" id="resKg">0</span></div>
+    <div>Price for Grams: <span class="val" id="resGram">0</span></div>
+    <div>Price per 1 Gram: <span class="val" id="resOneGram">0</span></div>
   </div>
 </div>
 
 <script>
-  // Scatter effect script
-  const guide = document.getElementById('guide');
-  
-  guide.addEventListener('mouseover', () => {
-    guide.style.position = 'fixed';
-    guide.style.top = Math.random() * 80 + 'vh';
-    guide.style.left = Math.random() * 80 + 'vw';
-    guide.style.transform = 'scale(1.2) rotate(10deg)';
-    guide.style.zIndex = '1000';
+  const container = document.getElementById('textContainer');
+  const text = container.innerText;
+  container.innerHTML = '';
+
+  // প্রতিটি অক্ষরকে আলাদা span এ রূপান্তর
+  text.split('').forEach(char => {
+    const span = document.createElement('span');
+    span.innerText = char;
+    span.className = 'scatter-text';
+    container.appendChild(span);
   });
 
-  guide.addEventListener('mouseout', () => {
-    guide.style.position = 'relative';
-    guide.style.top = '0';
-    guide.style.left = '0';
-    guide.style.transform = 'scale(1) rotate(0deg)';
+  const letters = document.querySelectorAll('.scatter-text');
+
+  container.addEventListener('mouseover', () => {
+    letters.forEach(letter => {
+      // প্রতিটি অক্ষরকে এলোমেলো দিকে পাঠানো
+      const x = (Math.random() - 0.5) * 500;
+      const y = (Math.random() - 0.5) * 500;
+      letter.style.transform = `translate(${x}px, ${y}px) rotate(${Math.random() * 360}deg)`;
+      letter.style.opacity = '0';
+    });
   });
 
-  // Calculation script
+  container.addEventListener('mouseout', () => {
+    letters.forEach(letter => {
+      // আবার আগের জায়গায় ফিরে আসা
+      letter.style.transform = `translate(0, 0) rotate(0deg)`;
+      letter.style.opacity = '1';
+    });
+  });
+
   function calculate() {
-    const price = parseFloat(document.getElementById('pricePerKg').value) || 0;
-    const kg = parseFloat(document.getElementById('qtyKg').value) || 0;
-    const gram = parseFloat(document.getElementById('qtyGram').value) || 0;
-
-    document.getElementById('resKg').innerHTML = (price * kg).toFixed(2);
-    document.getElementById('resGram').innerHTML = ((price / 1000) * gram).toFixed(2);
-    document.getElementById('resOneGram').innerHTML = (price / 1000).toFixed(2);
+    const p = parseFloat(document.getElementById('pricePerKg').value) || 0;
+    const k = parseFloat(document.getElementById('qtyKg').value) || 0;
+    const g = parseFloat(document.getElementById('qtyGram').value) || 0;
+    document.getElementById('resKg').innerHTML = (p * k).toFixed(2);
+    document.getElementById('resGram').innerHTML = ((p / 1000) * g).toFixed(2);
+    document.getElementById('resOneGram').innerHTML = (p / 1000).toFixed(2);
   }
 </script>
 
