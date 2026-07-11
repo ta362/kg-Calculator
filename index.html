@@ -1,142 +1,68 @@
-<div class="separator" style="clear: both;"><a href="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEg-LHxgDoLRNHxgOg82SHJAcmijiJpk-S1AO2FQelvAKs_3KxYhDPSg7Gvp2GJdAc96Pwgpkae9xui-vJkSa6aQ-1s-woyuU-Ibgl3USNRB4xfNMNUfU17Jm5EIs5-PnWHLeqOGVEsFZxB9PPpkPabS09MAK5dmH34Zxp1sj6Uow4xzvNrV28mnvdYRIX0/s456/edited-image%20%283%29.png" style="display: block; padding: 1em 0; text-align: center; "><img alt="" border="0" width="600" data-original-height="359" data-original-width="456" src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEg-LHxgDoLRNHxgOg82SHJAcmijiJpk-S1AO2FQelvAKs_3KxYhDPSg7Gvp2GJdAc96Pwgpkae9xui-vJkSa6aQ-1s-woyuU-Ibgl3USNRB4xfNMNUfU17Jm5EIs5-PnWHLeqOGVEsFZxB9PPpkPabS09MAK5dmH34Zxp1sj6Uow4xzvNrV28mnvdYRIX0/s600/edited-image%20%283%29.png"/></a></div>
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>💰 KG Price Calculator</title>
+  <title>💰 Advanced KG Price Calculator</title>
   <style>
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      background: linear-gradient(to right, #f8ffae, #43c6ac);
-      color: #333;
-      text-align: center;
-      padding: 20px;
-      margin: 0;
-    }
-
-    .container {
-      background: #fff;
-      border-radius: 15px;
-      box-shadow: 0 0 25px rgba(0, 0, 0, 0.15);
-      max-width: 500px;
-      width: 95%;
-      margin: auto;
-      padding: 25px 15px;
-    }
-
-    h1 {
-      color: #00b894;
-      font-size: 1.6em;
-    }
-
-    input {
-      width: 90%;
-      padding: 10px;
-      margin: 8px 0;
-      font-size: 16px;
-      border-radius: 8px;
-      border: 1px solid #ccc;
-      display: block;
-      margin-left: auto;
-      margin-right: auto;
-    }
-
-    button {
-      background-color: #00b894;
-      color: white;
-      border: none;
-      padding: 12px 25px;
-      font-size: 16px;
-      border-radius: 8px;
-      cursor: pointer;
-      margin-top: 10px;
-    }
-
-    button:hover {
-      background-color: #019875;
-    }
-
-    .result {
-      margin-top: 15px;
-      font-size: 18px;
-      font-weight: bold;
-      color: #2d3436;
-    }
-
-    .instructions {
-      background: #fff9c4;
-      color: #444;
-      border: 1px solid #ffeb3b;
-      border-radius: 10px;
-      text-align: left;
-      padding: 15px;
-      margin: 15px auto 20px;
-      font-size: 14px;
-      width: 90%;
-    }
-
-    .instructions ol {
-      padding-left: 20px;
-      margin: 0;
-    }
-
-    @media screen and (max-width: 400px) {
-      h1 {
-        font-size: 1.4em;
-      }
-
-      button {
-        font-size: 15px;
-        padding: 10px 20px;
-      }
-
-      .result {
-        font-size: 16px;
-      }
-
-      .instructions {
-        font-size: 13px;
-        padding: 12px;
-      }
-    }
+    body { font-family: 'Segoe UI', sans-serif; background: #f0f2f5; color: #333; padding: 20px; text-align: center; }
+    .container { background: #fff; max-width: 500px; margin: auto; padding: 20px; border-radius: 15px; box-shadow: 0 0 15px rgba(0,0,0,0.1); }
+    h1 { color: #00b894; font-size: 1.5em; }
+    .box { border: 1px solid #ddd; padding: 15px; margin: 15px 0; border-radius: 10px; background: #f9f9f9; text-align: left; }
+    input { width: 90%; padding: 8px; margin: 5px 0; border: 1px solid #ccc; border-radius: 5px; }
+    button { background: #00b894; color: white; border: none; padding: 10px; width: 100%; border-radius: 5px; cursor: pointer; margin-top: 5px; }
+    .result { font-weight: bold; color: #d63031; margin-top: 10px; }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1>💰 KG Price Calculator</h1>
 
-    <div class="instructions">
-      <strong>📌 How to Use:</strong>
-      <ol>
-        <li>Enter the <b>price per KG</b> (e.g., 100 ₹).</li>
-        <li>Enter the <b>KG</b> (e.g., 2).</li>
-        <li>Enter the <b>grams</b> (e.g., 500 g, optional).</li>
-        <li>Click <b>“Calculate Total”</b>.</li>
-        <li>You’ll see the total price below.</li>
-      </ol>
-    </div>
+<div class="container">
+  <h1>💰 KG Calculator</h1>
 
-    <input type="number" id="pricePerKg" placeholder="Enter price per KG (₹)">
-    <input type="number" id="kg" placeholder="Enter KG">
-    <input type="number" id="grams" placeholder="Enter grams (optional)">
-    <button onclick="calculate()">Calculate Total</button>
-
-    <div class="result" id="result"></div>
+  <div class="box">
+    <strong>১. মোট কত কেজির দাম কত?</strong>
+    <input type="number" id="priceKg" placeholder="প্রতি কেজির দাম (টাকা)">
+    <input type="number" id="qtyKg" placeholder="মোট কেজি">
+    <button onclick="calcTotal()">দাম বের করুন</button>
+    <div class="result" id="resTotal"></div>
   </div>
 
-  <script>
-    function calculate() {
-      const pricePerKg = parseFloat(document.getElementById("pricePerKg").value);
-      const kg = parseFloat(document.getElementById("kg").value) || 0;
-      const grams = parseFloat(document.getElementById("grams").value) || 0;
+  <div class="box">
+    <strong>২. কত গ্রামের দাম কত?</strong>
+    <input type="number" id="priceKg2" placeholder="প্রতি কেজির দাম (টাকা)">
+    <input type="number" id="qtyGram" placeholder="কত গ্রাম">
+    <button onclick="calcGram()">দাম বের করুন</button>
+    <div class="result" id="resGram"></div>
+  </div>
 
-      const totalKg = kg + (grams / 1000);
-      const totalPrice = (totalKg * pricePerKg).toFixed(2);
+  <div class="box">
+    <strong>৩. ১ গ্রামের দাম কত?</strong>
+    <input type="number" id="priceKg3" placeholder="প্রতি কেজির দাম (টাকা)">
+    <button onclick="calcOneGram()">১ গ্রামের দাম দেখুন</button>
+    <div class="result" id="resOneGram"></div>
+  </div>
+</div>
 
-      document.getElementById("result").innerHTML = 
-        `📦 Total: ₹${totalPrice} for ${kg} kg ${grams} g`;
-    }
-  </script>
+<script>
+  function calcTotal() {
+    let price = document.getElementById('priceKg').value;
+    let qty = document.getElementById('qtyKg').value;
+    document.getElementById('resTotal').innerHTML = `মোট দাম: ${price * qty} টাকা`;
+  }
+
+  function calcGram() {
+    let price = document.getElementById('priceKg2').value;
+    let gram = document.getElementById('qtyGram').value;
+    let total = (price / 1000) * gram;
+    document.getElementById('resGram').innerHTML = `${gram} গ্রামের দাম: ${total.toFixed(2)} টাকা`;
+  }
+
+  function calcOneGram() {
+    let price = document.getElementById('priceKg3').value;
+    let oneGram = price / 1000;
+    document.getElementById('resOneGram').innerHTML = `১ গ্রামের দাম: ${oneGram.toFixed(2)} টাকা`;
+  }
+</script>
+
 </body>
 </html>
