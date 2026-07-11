@@ -3,13 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Price Calculator</title>
+  <title>Interactive Price Calculator</title>
   <style>
     body { font-family: 'Segoe UI', sans-serif; background: #f0f2f5; padding: 20px; text-align: center; }
-    .container { background: #fff; max-width: 450px; margin: auto; padding: 25px; border-radius: 15px; box-shadow: 0 0 15px rgba(0,0,0,0.1); }
+    .container { background: #fff; max-width: 450px; margin: auto; padding: 25px; border-radius: 15px; box-shadow: 0 0 15px rgba(0,0,0,0.1); position: relative; }
     h1 { color: #00b894; font-size: 1.5em; }
     
-    /* Instructions Styling */
+    /* Interactive Instructions Styling */
     .usage-guide { 
       background: #eef6ff; 
       padding: 15px; 
@@ -18,8 +18,11 @@
       font-size: 13px; 
       margin-bottom: 20px; 
       border-left: 5px solid #00b894;
+      transition: all 0.8s ease; /* স্মুথ ট্রানজিশন */
+      cursor: pointer;
+      position: relative;
     }
-    
+
     input { width: 90%; padding: 10px; margin: 8px 0; border: 1px solid #ccc; border-radius: 8px; }
     .result-box { margin-top: 20px; padding: 15px; background: #e8f5e9; border-radius: 10px; font-weight: bold; text-align: left; }
     .result-text { margin: 8px 0; color: #333; }
@@ -31,18 +34,18 @@
 <div class="container">
   <h1>Price Calculator</h1>
   
-  <!-- Instructions added directly into the UI -->
-  <div class="usage-guide">
-    <strong>How to use:</strong>
-    <ol style="padding-left: 20px; margin: 5px 0;">
+  <!-- Interactive Guide -->
+  <div class="usage-guide" id="guide">
+    <strong>How to use (Hover me!):</strong>
+    <ol id="guideList" style="padding-left: 20px; margin: 5px 0;">
       <li>Enter the <b>Price per KG</b>.</li>
       <li>Enter the <b>Total KG</b> to see the price for that weight.</li>
       <li>Enter <b>Grams</b> to see the price for a specific amount.</li>
-      <li>The calculator works <b>automatically</b> as you type!</li>
+      <li>The calculator works <b>automatically</b>!</li>
     </ol>
   </div>
 
-  <input type="number" id="pricePerKg" placeholder="Price per KG (e.g. 1300)" oninput="calculate()">
+  <input type="number" id="pricePerKg" placeholder="Price per KG" oninput="calculate()">
   <input type="number" id="qtyKg" placeholder="Total KG" oninput="calculate()">
   <input type="number" id="qtyGram" placeholder="Grams" oninput="calculate()">
 
@@ -54,20 +57,33 @@
 </div>
 
 <script>
+  // Scatter effect script
+  const guide = document.getElementById('guide');
+  
+  guide.addEventListener('mouseover', () => {
+    guide.style.position = 'fixed';
+    guide.style.top = Math.random() * 80 + 'vh';
+    guide.style.left = Math.random() * 80 + 'vw';
+    guide.style.transform = 'scale(1.2) rotate(10deg)';
+    guide.style.zIndex = '1000';
+  });
+
+  guide.addEventListener('mouseout', () => {
+    guide.style.position = 'relative';
+    guide.style.top = '0';
+    guide.style.left = '0';
+    guide.style.transform = 'scale(1) rotate(0deg)';
+  });
+
+  // Calculation script
   function calculate() {
     const price = parseFloat(document.getElementById('pricePerKg').value) || 0;
     const kg = parseFloat(document.getElementById('qtyKg').value) || 0;
     const gram = parseFloat(document.getElementById('qtyGram').value) || 0;
 
-    // Calculate
-    const totalKgPrice = price * kg;
-    const totalGramPrice = (price / 1000) * gram;
-    const perGramPrice = price / 1000;
-
-    // Update Display
-    document.getElementById('resKg').innerHTML = totalKgPrice.toFixed(2);
-    document.getElementById('resGram').innerHTML = totalGramPrice.toFixed(2);
-    document.getElementById('resOneGram').innerHTML = perGramPrice.toFixed(2);
+    document.getElementById('resKg').innerHTML = (price * kg).toFixed(2);
+    document.getElementById('resGram').innerHTML = ((price / 1000) * gram).toFixed(2);
+    document.getElementById('resOneGram').innerHTML = (price / 1000).toFixed(2);
   }
 </script>
 
